@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+            color: #333;
+        }
+
+        #product-details {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        p {
+            color: #666;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-top: 20px;
+        }
+    </style>
+    
+       
+</head>
+<body>
+    <h1>Product Details</h1>
+    <div id="product-details"></div>
+
+    <script>
+        // Function to fetch and display product details
+        async function fetchProductDetails(productId) {
+            try {
+                const response = await fetch(`http://localhost:8080/productDetails?id=${productId}`);
+                const productDetails = await response.json();
+                
+                // Get the product details
+                const productDetailsContainer = document.getElementById('product-details');
+
+                // Display product details
+                const productName = document.createElement('h2');
+                productName.textContent = productDetails.name;
+
+                const productDescription = document.createElement('p');
+                productDescription.textContent = productDetails.speccs;
+
+                const productPrice = document.createElement('p');
+                productPrice.textContent = `Price: $${productDetails.price}`;
+
+                const productImage = document.createElement('img');
+                productImage.src = productDetails.imageUrl;
+                productImage.alt = productDetails.name;
+
+                productDetailsContainer.appendChild(productName);
+                productDetailsContainer.appendChild(productDescription);
+                productDetailsContainer.appendChild(productPrice);
+                productDetailsContainer.appendChild(productImage);
+            } catch (error) {
+                console.error('Error fetching product details:', error);
+            }
+        }
+
+        // take product ID from URL 
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+
+        
+        fetchProductDetails(productId);
+    </script>
+</body>
+</html>

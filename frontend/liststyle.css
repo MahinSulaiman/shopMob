@@ -1,0 +1,26 @@
+
+
+.product-item {
+    width: 48%; 
+    margin: 1%; 
+    padding: 1%; 
+    border: 1px solid #ccc; 
+    box-sizing: border-box; 
+    display: inline-block; 
+    vertical-align: top; 
+}
+
+
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+
+.product-item img {
+    max-width: 100%; 
+    height: auto; 
+    display: block; 
+    margin-bottom: 10px; 
+}

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="file"] {
+            margin-top: 10px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+    
+</head>
+<body>
+    <h1>Edit Product Details</h1>
+    <form id="editForm" enctype="multipart/form-data">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name"><br><br>
+        
+        <label for="price">Price:</label><br>
+        <input type="text" id="price" name="price"><br><br>
+        
+        <label for="speccs">Description:</label><br>
+        <textarea id="speccs" name="speccs"></textarea><br><br>
+        
+        <label for="image">Image:</label><br>
+        <input type="file" name="image" accept="image/*"><br><br><br>
+        
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        // take ID from the URL 
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+
+        // Fetch data from API to  the form fields
+        fetch(`http://localhost:8080/productDetails?id=${productId}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                document.getElementById('name').value = data.name;
+                document.getElementById('price').value = data.price;
+                document.getElementById('speccs').value = data.speccs;
+               
+            })
+            .catch(error => {
+                console.error('Error fetching product details:', error);
+            });
+
+        document.getElementById('editForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch(`http://localhost:8080/editPdt?id=${productId}`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                
+                window.alert("success")
+                window.location.href = `listpdts-admin.html`
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating product details.');
+            });
+        });
+    </script>
+</body>
+</html>
